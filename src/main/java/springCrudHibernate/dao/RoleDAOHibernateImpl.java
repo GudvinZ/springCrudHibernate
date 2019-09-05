@@ -9,7 +9,7 @@ import springCrudHibernate.model.Role;
 @Repository
 public class RoleDAOHibernateImpl extends AbstractHibernateDAO<Role> {
 
-    RoleDAOHibernateImpl(SessionFactory sessionFactory, Role entity) {
+    private RoleDAOHibernateImpl(SessionFactory sessionFactory, Role entity) {
         super(sessionFactory, entity);
     }
 }

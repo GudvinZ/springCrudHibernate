@@ -7,7 +7,7 @@ import springCrudHibernate.model.User;
 
 @Repository
 public class UserDAOHibernateImpl extends AbstractHibernateDAO<User> {
-    UserDAOHibernateImpl(SessionFactory sessionFactory, User entity) {
+    private UserDAOHibernateImpl(SessionFactory sessionFactory, User entity) {
         super(sessionFactory, entity);
     }
 
