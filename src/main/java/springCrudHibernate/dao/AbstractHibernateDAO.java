@@ -14,14 +14,10 @@ public abstract class AbstractHibernateDAO<T> implements DAO<T> {
 
     AbstractHibernateDAO(SessionFactory sessionFactory, T entity) {
         this.sessionFactory = sessionFactory;
-        setModelClass(entity);
+        this.modelClass = entity.getClass();
     }
 
-    void setModelClass(T modelClass) {
-        this.modelClass = modelClass.getClass();
-    }
-
-    public Class getModelClass() {
+    private Class getModelClass() {
         return modelClass;
     }
 

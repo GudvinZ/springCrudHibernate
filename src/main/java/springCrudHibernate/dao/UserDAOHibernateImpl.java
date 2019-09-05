@@ -10,10 +10,6 @@ public class UserDAOHibernateImpl extends AbstractHibernateDAO<User> {
     UserDAOHibernateImpl(SessionFactory sessionFactory, User entity) {
         super(sessionFactory, entity);
     }
-    /*private UserDAOHibernateImpl(SessionFactory sessionFactory) {
-        super(sessionFactory);
-//        super.setModelClass(User.class);
-    }*/
 
     @Override
     public void add(User user) {
