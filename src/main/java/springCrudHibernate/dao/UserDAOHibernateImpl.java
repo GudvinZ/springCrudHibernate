@@ -24,7 +24,7 @@ public class UserDAOHibernateImpl extends AbstractHibernateDAO<User> {
     @Override
     public void add(User user) {
         Session session = super.getSessionFactory().getCurrentSession();
-            session.merge(user);
+        session.merge(user);
     }
 
     @Override

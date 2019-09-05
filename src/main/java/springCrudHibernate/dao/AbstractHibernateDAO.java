@@ -17,11 +17,11 @@ public abstract class AbstractHibernateDAO<T> implements DAO<T> {
         return modelClass;
     }
 
-    public SessionFactory getSessionFactory() {
+    SessionFactory getSessionFactory() {
         return sessionFactory;
     }
 
-    public void setModelClass(Class modelClass) {
+    void setModelClass(Class modelClass) {
         this.modelClass = modelClass;
     }
 

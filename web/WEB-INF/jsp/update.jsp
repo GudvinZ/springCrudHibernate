@@ -34,8 +34,8 @@
                     <c:out value="User: ${user.getName()}"/><br>
                     <c:out value="Login: ${user.getLogin()}"/><br>
                     <c:out value="Password: ${user.getPassword()}"/><br>
-                    <form action="<c:url value="/admin/update"/>" method="get" style="display:inline">
-                        <button type="submit" name="id" value=${user.getId()}>Update</button>
+                    <form action="<c:url value="/admin/update/${user.getId()}"/>" method="get" style="display:inline">
+                        <button type="submit">Update</button>
                     </form>
                     <form action="<c:url value="/admin/delete"/>" method="post" style="display:inline">
                         <button type="submit" value="${user.getId()}" name="id">Delete</button>

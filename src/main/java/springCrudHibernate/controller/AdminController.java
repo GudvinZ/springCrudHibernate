@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import springCrudHibernate.model.User;
@@ -56,11 +57,11 @@ public class AdminController {
         return modelAndView;
     }
 
-    @GetMapping("/admin/update")
-    public ModelAndView updatePage(@ModelAttribute User user) {
+    @GetMapping("/admin/update/{id}")
+    public ModelAndView updatePage(@PathVariable String id) {
         ModelAndView modelAndView = new ModelAndView();
 
-        modelAndView.addObject("id", user.getId());
+        modelAndView.addObject("id", id);
 
         modelAndView.addObject("users", userService.getAllUsers());
         modelAndView.setViewName("update");
