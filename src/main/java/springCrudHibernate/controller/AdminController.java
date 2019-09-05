@@ -3,16 +3,16 @@ package springCrudHibernate.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import springCrudHibernate.model.User;
 import springCrudHibernate.service.IUserService;
 import springCrudHibernate.service.UserService;
 
 @Controller
+@RequestMapping(value = "/admin")
 public class AdminController {
     private final IUserService userService;
 
@@ -21,69 +21,59 @@ public class AdminController {
         this.userService = userService;
     }
 
-    @GetMapping("/admin")
-    public ModelAndView adminPage() {
-        ModelAndView modelAndView = new ModelAndView();
+//    @ModelAttribute
+//    public void addAllUsers(Model model) {
+//        model.addAttribute("users", userService.getAllUsers());
+//    }
 
-        modelAndView.addObject("users", userService.getAllUsers());
-
-        modelAndView.setViewName("admin");
-        return modelAndView;
+    private void addAllUsersToModel(ModelMap model) {
+        model.addAttribute("users", userService.getAllUsers());
     }
 
-    @PostMapping(value = "/admin/add")
-    public ModelAndView addUser(@ModelAttribute User user) {
-        ModelAndView modelAndView = new ModelAndView();
-
-        if (user.getLogin().isEmpty() || user.getPassword().isEmpty() || user.getName().isEmpty() || user.getRoles().isEmpty()) {
-            modelAndView.addObject("isEmptyForm", true);
-        } else {
-            modelAndView.addObject("isValidate", userService.addUser(user));
-        }
-
-        modelAndView.addObject("users", userService.getAllUsers());
-        modelAndView.setViewName("admin");
-        return modelAndView;
+    @GetMapping
+    public String adminPage(ModelMap model) {
+        addAllUsersToModel(model);
+        return "admin";
     }
 
-    @PostMapping(value = "/admin/delete")
-    public ModelAndView deleteUser(@ModelAttribute User user) {
-        ModelAndView modelAndView = new ModelAndView();
+    @PostMapping(value = "/add")
+    public String addUser(@ModelAttribute User user, ModelMap model) {
+        if (user.getLogin().isEmpty() || user.getPassword().isEmpty() || user.getName().isEmpty() || user.getRoles().isEmpty())
+            model.addAttribute("isEmptyForm", true);
+        else
+            model.addAttribute("isValidate", userService.addUser(user));
 
-        userService.deleteUserById(user.getId());
-
-        modelAndView.addObject("users", userService.getAllUsers());
-        modelAndView.setViewName("admin");
-        return modelAndView;
+        addAllUsersToModel(model);
+        return "admin";
     }
 
-    @GetMapping("/admin/update/{id}")
-    public ModelAndView updatePage(@PathVariable String id) {
-        ModelAndView modelAndView = new ModelAndView();
+    @PostMapping(value = "/delete")
+    public String deleteUser(@RequestParam Long id, ModelMap model) {
+        userService.deleteUserById(id);
 
-        modelAndView.addObject("id", id);
-
-        modelAndView.addObject("users", userService.getAllUsers());
-        modelAndView.setViewName("update");
-        return modelAndView;
+        addAllUsersToModel(model);
+        return "admin";
     }
 
-    @PostMapping(value = "/admin/update")
-    public ModelAndView updateUser(@ModelAttribute User user) {
-        ModelAndView modelAndView = new ModelAndView();
+    @GetMapping("/update/{id}")
+    public String updatePage(@PathVariable String id, ModelMap model) {
+        model.addAttribute("id", id);
 
+        addAllUsersToModel(model);
+        return "update";
+    }
+
+    @PostMapping(value = "/update")
+    public String updateUser(@ModelAttribute User user, ModelMap model) {
         boolean isAlreadyExist = !userService.updateUser(user);
-        modelAndView.addObject("isAlreadyExist", isAlreadyExist);
-        modelAndView.addObject("users", userService.getAllUsers());
+        model.addAttribute("isAlreadyExist", isAlreadyExist);
 
-        if(isAlreadyExist) {
-            modelAndView.addObject("login", user.getLogin());
-            modelAndView.addObject("id", user.getId());
-            modelAndView.setViewName("update");
-        } else {
-            modelAndView.setViewName("admin");
-        }
-
-        return modelAndView;
+        addAllUsersToModel(model);
+        if (isAlreadyExist) {
+            model.addAttribute("login", user.getLogin());
+            model.addAttribute("id", user.getId());
+            return "update";
+        } else
+            return "admin";
     }
 }

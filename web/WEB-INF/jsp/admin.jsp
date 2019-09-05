@@ -9,7 +9,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>index</title>
+    <title>admin</title>
 </head>
 <body>
 <c:if test="${users.size()<1}">

@@ -1,19 +1,18 @@
 package springCrudHibernate.model;
 
 import com.sun.istack.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
-import springCrudHibernate.service.RoleService;
+import org.springframework.stereotype.Component;
 
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
-public class User {
+@Component
+public class User implements IEntity<User>{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

@@ -2,10 +2,9 @@ package springCrudHibernate.dao;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import springCrudHibernate.model.IEntity;
 
-import java.security.InvalidParameterException;
 import java.util.List;
 
 public abstract class AbstractHibernateDAO<T> implements DAO<T> {
@@ -13,21 +12,21 @@ public abstract class AbstractHibernateDAO<T> implements DAO<T> {
     private Class modelClass;
     private SessionFactory sessionFactory;
 
+    AbstractHibernateDAO(SessionFactory sessionFactory, T entity) {
+        this.sessionFactory = sessionFactory;
+        setModelClass(entity);
+    }
+
+    void setModelClass(T modelClass) {
+        this.modelClass = modelClass.getClass();
+    }
+
     public Class getModelClass() {
         return modelClass;
     }
 
     SessionFactory getSessionFactory() {
         return sessionFactory;
-    }
-
-    void setModelClass(Class modelClass) {
-        this.modelClass = modelClass;
-    }
-
-    @Autowired
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
     }
 
     @Override

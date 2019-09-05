@@ -1,5 +1,7 @@
 package springCrudHibernate.model;
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
@@ -7,7 +9,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "roles")
-public class Role {
+@Component
+public class Role implements IEntity<Role>{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

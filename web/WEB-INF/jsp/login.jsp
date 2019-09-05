@@ -9,7 +9,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>auth</title>
+    <title>login</title>
 </head>
 <body>
 <c:if test="${isEmptyForm}">
