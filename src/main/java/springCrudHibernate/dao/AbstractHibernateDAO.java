@@ -2,8 +2,6 @@ package springCrudHibernate.dao;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import springCrudHibernate.model.IEntity;
 
 import java.util.List;
 

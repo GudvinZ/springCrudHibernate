@@ -1,107 +1,30 @@
 package springCrudHibernate.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import springCrudHibernate.dao.DAO;
-import springCrudHibernate.dao.UserDAOHibernateImpl;
-import springCrudHibernate.model.Role;
 import springCrudHibernate.model.User;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
 
-@Service
-public class UserService implements IUserService {
+public interface UserService {
 
-    private final DAO<User> dao;
-    private final IRoleService roleService;
+    boolean addUser(User user);
 
-    private UserService(DAO<User> dao, IRoleService roleService) {
-        this.dao = dao;
-        this.roleService = roleService;
-    }
+    boolean validateUser(String login, String password);
 
-    @Transactional
-    @Override
-    public boolean addUser(User user) {
-        if (getUserByLogin(user.getLogin()) != null)
-            return false;
-        user.setRoles(user.getRoles().stream().map(role -> roleService.getRoleByName(role.getName())).collect(Collectors.toSet()));
-        dao.add(user);
-        return true;
-    }
+    void deleteUserById(Long id);
 
-    @Transactional
-    public boolean validateUser(String login, String password) {
-        User user = getUserByLogin(login);
-        return user != null && user.getPassword().equals(password);
-    }
+    void deleteAllUsers();
 
-    @Transactional
-    @Override
-    public void deleteUserById(Long id) {
-        dao.deleteById(id);
-    }
+    boolean updateUser(User user);
 
-    @Transactional
-    @Override
-    public void deleteAllUsers() {
-        dao.deleteAll();
-    }
+    List<User> getAllUsers();
 
-    @Transactional
-    @Override
-    public boolean updateUser(User user) {
-        User old = getUserById(user.getId());
-        user.setRoles(old.getRoles());
-        if (old.getLogin().equals(user.getLogin())) {
-            dao.update(user);
-            return true;
-        } else if (getUserByLogin(user.getLogin()) == null) {
-            dao.update(user);
-            return true;
-        } else
-            return false;
-    }
+    User getUserById(Long param);
 
-    @Transactional
-    @Override
-    public List<User> getAllUsers() {
-        return dao.getAll();
-    }
+    User getUserByLogin(String param);
 
-    @Transactional
-    @Override
-    public User getUserById(Long id) {
-        return dao.getUniqueByParam(id, "id");
-    }
+    List<User> getUsersByRoles(String... params);
 
-    @Transactional
-    @Override
-    public User getUserByLogin(String login) {
-        return dao.getUniqueByParam(login, "login");
-    }
-
-    @Transactional
-    @Override
-    public List<User> getUsersByRoles(String... rolesNames) {
-        Set<User> users = roleService.getRoleByName(rolesNames[0]).getUsers();
-
-        for (int i = 1; i < rolesNames.length; i++) {
-            Iterator<User> itr = users.iterator();
-            while (itr.hasNext()) {
-                if(!itr.next().getRoles().contains(new Role(rolesNames[i])))
-                    itr.remove();
-            }
-        }
-        return new ArrayList<>(users);
-    }
-
-    @Transactional
-    @Override
-    public List<User> getUsersByName(String name) {
-        return dao.getListByParam(name, "name");
-    }
+    List<User> getUsersByName(String param);
 }

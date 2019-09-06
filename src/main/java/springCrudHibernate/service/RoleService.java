@@ -1,70 +1,24 @@
 package springCrudHibernate.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import springCrudHibernate.dao.AbstractHibernateDAO;
-import springCrudHibernate.dao.DAO;
-import springCrudHibernate.dao.RoleDAOHibernateImpl;
 import springCrudHibernate.model.Role;
 import springCrudHibernate.model.User;
 
-
 import java.util.List;
 
-@Service
-public class RoleService implements IRoleService {
-    private final DAO<Role> dao;
+public interface RoleService {
 
-    private RoleService(DAO<Role> dao) {
-        this.dao = dao;
-    }
+    boolean addRole(Role role);
 
+    void deleteRoleById(Long id);
 
-    @Transactional
-    @Override
-    public boolean addRole(Role role) {
-        if (getRoleByName(role.getName()) == null) {
-            dao.add(role);
-            return true;
-        } else
-            return false;
-    }
+    void deleteAllRoles();
 
-    @Transactional
-    @Override
-    public void deleteRoleById(Long id) {
-        dao.deleteById(id);
-    }
+    boolean updateRole(Role role) ;
 
-    @Transactional
-    @Override
-    public void deleteAllRoles() {
-        dao.deleteAll();
-    }
+    List<Role> getAllRoles();
 
-    @Transactional
-    @Override
-    public boolean updateRole(Role role) {
-        dao.update(role);
-        return true;
-    }
+    Role getRoleById(Long id);
 
-    @Transactional
-    @Override
-    public List<Role> getAllRoles() {
-        return dao.getAll();
-    }
-
-    @Transactional
-    @Override
-    public Role getRoleById(Long id) {
-        return dao.getUniqueByParam(id, "id");
-    }
-
-    @Transactional
-    @Override
-    public Role getRoleByName(String name) {
-        return dao.getUniqueByParam(name, "name");
-    }
+    Role getRoleByName(String name);
 }
