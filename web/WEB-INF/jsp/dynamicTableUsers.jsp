@@ -24,6 +24,7 @@
                     <button type="submit">Update</button>
                 </form>
                 <form action="<c:url value="/admin/delete"/>" method="post" style="display:inline">
+                    <input name="${_csrf.parameterName}" value="${_csrf.token}" type="hidden">
                     <button type="submit" value="${user.getId()}" name="id">Delete</button>
                 </form>
             </td>
