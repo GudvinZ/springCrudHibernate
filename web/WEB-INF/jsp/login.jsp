@@ -18,7 +18,7 @@
 <c:if test="${isValidate==false}">
     <c:out value="wrong login or password"/>
 </c:if>
-<form action="<c:url value="/"/>" method="post">
+<form action="/login" method="post">
     <table>
         <tr>
             <td>
@@ -27,7 +27,7 @@
             </td>
             <td>
                 <label>
-                    <input type="text" name="login">
+                    <input type="text" name="username">
                 </label><br>
                 <label>
                     <input type="password" name="password">

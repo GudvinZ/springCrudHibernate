@@ -12,7 +12,6 @@ import springCrudHibernate.service.UserService;
 public class AdminController {
     private final UserService userService;
 
-    @Autowired
     private AdminController(UserService userService) {
         this.userService = userService;
     }

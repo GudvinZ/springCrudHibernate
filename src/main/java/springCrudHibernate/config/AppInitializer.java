@@ -1,30 +1,32 @@
 package springCrudHibernate.config;
 
-import org.springframework.web.WebApplicationInitializer;
-import org.springframework.web.context.ContextLoaderListener;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-import org.springframework.web.context.support.GenericWebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
-import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.servlet.Filter;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
 
-public class AppInitializer implements WebApplicationInitializer {
+public class AppInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
+    @Override
+    protected Class<?>[] getRootConfigClasses() {
+        return new Class[]{HibernateConfig.class, WebSecurityConfig.class};
+    }
 
     @Override
-    public void onStartup(ServletContext servletContext) throws ServletException {
-        AnnotationConfigWebApplicationContext root = new AnnotationConfigWebApplicationContext();
-        root.scan("springCrudHibernate");
-        servletContext.addListener(new ContextLoaderListener(root));
+    protected Class<?>[] getServletConfigClasses() {
+        return new Class[]{WebConfig.class};
+    }
 
-        ServletRegistration.Dynamic appServlet =
-                servletContext.addServlet("mvc", new DispatcherServlet(new GenericWebApplicationContext()));
-        appServlet.setLoadOnStartup(1);
-        appServlet.addMapping("/");
+    @Override
+    protected String[] getServletMappings() {
+        return new String[]{"/"};
+    }
 
+    @Override
+    protected Filter[] getServletFilters() {
+        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+        characterEncodingFilter.setEncoding("UTF-8");
+        characterEncodingFilter.setForceEncoding(true);
+
+        return new Filter[]{characterEncodingFilter};
     }
 }

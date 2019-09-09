@@ -3,6 +3,7 @@ package springCrudHibernate.model;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -10,20 +11,20 @@ import java.util.Set;
 @Entity
 @Table(name = "roles")
 @Component
-public class Role implements IEntity<Role>{
+public class Role implements IEntity<Role> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "role", unique = true)
+    @Column(name = "name", unique = true)
     private String name;
 
-    @ManyToMany/*(mappedBy = "roles")*/
-    @JoinTable(name = "users_roles",
-            joinColumns = @JoinColumn(name = "role_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> users = new HashSet<>();
+    @ManyToMany(mappedBy = "roles")
+//    @JoinTable(name = "users_roles",
+//            joinColumns = @JoinColumn(name = "role_id"),
+//            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Collection<User> users = new HashSet<>();
 
     public Role(Long id, String name, Set<User> users) {
         this.id = id;
@@ -36,6 +37,10 @@ public class Role implements IEntity<Role>{
     }
 
     public Role() {
+    }
+
+    public void setUsers(Collection<User> users) {
+        this.users = users;
     }
 
     public Long getId() {
@@ -54,7 +59,7 @@ public class Role implements IEntity<Role>{
         this.name = role;
     }
 
-    public Set<User> getUsers() {
+    public Collection<User> getUsers() {
         return users;
     }
 

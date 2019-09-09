@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -31,7 +32,7 @@ public class User implements IEntity<User>{
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles = new HashSet<>();
+    private Collection<Role> roles = new HashSet<>();
 
     public User(Long id, String login, String password, String name, @NotNull String[] roles) {
         this.id = id;
@@ -98,11 +99,11 @@ public class User implements IEntity<User>{
         this.name = name;
     }
 
-    public Set<Role> getRoles() {
+    public Collection<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(Collection<Role> roles) {
         this.roles = roles;
     }
 

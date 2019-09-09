@@ -1,5 +1,6 @@
 package springCrudHibernate.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import springCrudHibernate.dao.DAO;
@@ -15,7 +16,6 @@ public class RoleServiceImpl implements RoleService {
     private RoleServiceImpl(DAO<Role> dao) {
         this.dao = dao;
     }
-
 
     @Transactional
     @Override

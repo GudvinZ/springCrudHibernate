@@ -1,5 +1,14 @@
 package springCrudHibernate.service;
 
+import javassist.NotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User.UserBuilder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import springCrudHibernate.dao.DAO;
@@ -11,13 +20,14 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
-
     private final DAO<User> dao;
     private final RoleService roleService;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    private UserServiceImpl(DAO<User> dao, RoleService roleService) {
+    public UserServiceImpl(DAO<User> dao, RoleService roleService, BCryptPasswordEncoder passwordEncoder) {
         this.dao = dao;
         this.roleService = roleService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
@@ -26,6 +36,7 @@ public class UserServiceImpl implements UserService {
         if (getUserByLogin(user.getLogin()) != null)
             return false;
         user.setRoles(user.getRoles().stream().map(role -> roleService.getRoleByName(role.getName())).collect(Collectors.toSet()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         dao.add(user);
         return true;
     }
@@ -54,6 +65,8 @@ public class UserServiceImpl implements UserService {
         User old = getUserById(user.getId());
         user.setRoles(old.getRoles());
         if (old.getLogin().equals(user.getLogin())) {
+            if(!old.getPassword().equals(user.getPassword()))
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
             dao.update(user);
             return true;
         } else if (getUserByLogin(user.getLogin()) == null) {
@@ -84,12 +97,12 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public List<User> getUsersByRoles(String... rolesNames) {
-        Set<User> users = roleService.getRoleByName(rolesNames[0]).getUsers();
+        Collection<User> users = roleService.getRoleByName(rolesNames[0]).getUsers();
 
         for (int i = 1; i < rolesNames.length; i++) {
             Iterator<User> itr = users.iterator();
             while (itr.hasNext()) {
-                if(!itr.next().getRoles().contains(new Role(rolesNames[i])))
+                if (!itr.next().getRoles().contains(new Role(rolesNames[i])))
                     itr.remove();
             }
         }
@@ -100,5 +113,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getUsersByName(String name) {
         return dao.getListByParam(name, "name");
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+        User user = getUserByLogin(login);
+        if(user == null) {
+            throw new UsernameNotFoundException("user is not exist");
+        }
+
+        return new org.springframework.security.core.userdetails.User(user.getLogin(), user.getPassword(),
+                user.getRoles().stream().map(x-> new SimpleGrantedAuthority(x.getName())).collect(Collectors.toList()));
     }
 }
