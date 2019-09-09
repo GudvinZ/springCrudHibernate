@@ -12,13 +12,13 @@
     <title>login</title>
 </head>
 <body>
-<c:if test="${isEmptyForm}">
-    <c:out value="all fields must be filled"/>
+<c:if test="${logout}">
+    <c:out value="you are logout"/>
 </c:if>
-<c:if test="${isValidate==false}">
+<c:if test="${error}">
     <c:out value="wrong login or password"/>
 </c:if>
-<form action="/login" method="post">
+<form action="login" method="post">
     <table>
         <tr>
             <td>
