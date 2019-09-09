@@ -26,6 +26,7 @@
                 Password:
             </td>
             <td>
+                <input name="${_csrf.parameterName}" value="${_csrf.token}" type="hidden">
                 <label>
                     <input type="text" name="username">
                 </label><br>
