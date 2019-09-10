@@ -31,11 +31,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/admin/**").hasAnyAuthority("admin")
                 .antMatchers("/user/**").hasAnyAuthority("user")
+                .antMatchers("/registration").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/login")
-                .permitAll()
+                .loginPage("/login").permitAll()
                 .successHandler(myAuthenticationSuccessHandler())
                 .and()
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll();

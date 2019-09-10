@@ -12,6 +12,9 @@
     <title>login</title>
 </head>
 <body>
+<c:if test="${postRegistration}">
+    <c:out value="you have been registered"/>
+</c:if>
 <c:if test="${logout}">
     <c:out value="you are logout"/>
 </c:if>
@@ -28,7 +31,7 @@
             <td>
                 <input name="${_csrf.parameterName}" value="${_csrf.token}" type="hidden">
                 <label>
-                    <input type="text" name="username">
+                    <input type="text" name="username" value="${login}">
                 </label><br>
                 <label>
                     <input type="password" name="password">
@@ -36,7 +39,8 @@
             </td>
         </tr>
     </table>
-    <button type="submit">Sign in</button>
+    <button type="submit" style="display: inline">Sign in</button>
 </form>
+<a href="/registration">Registration</a>
 </body>
 </html>
