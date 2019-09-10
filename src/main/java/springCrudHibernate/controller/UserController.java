@@ -1,5 +1,6 @@
 package springCrudHibernate.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,6 +14,7 @@ import springCrudHibernate.service.UserService;
 
 @Controller
 @RequestMapping(value = "/user")
+@PreAuthorize("hasAnyAuthority('user')")
 public class UserController {
     private final UserService userService;
 
