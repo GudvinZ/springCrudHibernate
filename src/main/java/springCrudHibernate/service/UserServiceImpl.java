@@ -63,11 +63,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean updateUser(User user) {
         User old = getUserById(user.getId());
-        user.setRoles(old.getRoles());
         if (old.getLogin().equals(user.getLogin())) {
-            if(!old.getPassword().equals(user.getPassword()))
-                user.setPassword(passwordEncoder.encode(user.getPassword()));
-            dao.update(user);
+            if (!old.getPassword().equals(user.getPassword()) && !user.getPassword().isEmpty())
+                old.setPassword(passwordEncoder.encode(user.getPassword()));
+            dao.update(old);
             return true;
         } else if (getUserByLogin(user.getLogin()) == null) {
             dao.update(user);
@@ -119,11 +118,11 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         User user = getUserByLogin(login);
-        if(user == null) {
+        if (user == null) {
             throw new UsernameNotFoundException("user is not exist");
         }
 
         return new org.springframework.security.core.userdetails.User(user.getLogin(), user.getPassword(),
-                user.getRoles().stream().map(x-> new SimpleGrantedAuthority(x.getName())).collect(Collectors.toList()));
+                user.getRoles().stream().map(x -> new SimpleGrantedAuthority(x.getName())).collect(Collectors.toList()));
     }
 }

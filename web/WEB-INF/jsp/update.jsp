@@ -63,7 +63,7 @@
                                         <input type="text" name="login" value="${user.getLogin()}">
                                     </label><br>
                                     <label>
-                                        <input type="password" name="password" value="${user.getPassword()}">
+                                        <input type="password" name="password" placeholder="${user.getPassword()}">
                                     </label><br>
                                     <label>
                                         <input type="text" name="name" value="${user.getName()}">
